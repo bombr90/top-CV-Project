@@ -1,0 +1,93 @@
+:root {
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  width: clamp(400px, 100%, 1200px);
+  --main-bg-color: #d4d4d4;
+  --main-text-color: #474747;
+  --hdft-bg-color: #636363;
+  --hdft-text-color: #DADEDF;
+  --form-bg-color: #f0f0f0;
+  --form-text-color: #474747;
+  border: 1px solid black;  
+  /* https://www.pinterest.com/pin/278026976972934168/ */
+}
+
+.App {
+  display:flex;
+  flex-direction: column;
+  padding: 8px;
+  text-align: center;
+}
+
+#header {
+  background-color: var(--hdft-bg-color);
+  color: var(--hdft-text-color);
+  padding: 16px;
+}
+
+#main {
+  background-color: var(--main-bg-color);
+  color: var(--main-text-color);
+  padding: 8px;
+}
+
+#footer {
+  background-color: var(--hdft-bg-color);
+  color: var(--hdft-text-color);
+  padding: 8px;
+}
+
+#inputform input,
+#inputform textarea {
+  border-radius: 4px;
+  background-color: var(--form-bg-color);
+  color: var(--form-text-color);
+  border: none;
+  min-height: 24px;
+  word-wrap: break-word;
+  padding: 4px;
+}
+
+#inputform textarea {
+  min-height: 72px;
+  resize: none;
+}
+
+#inputform input:focus,
+#inputform textarea:focus {
+  color: var(--hdft-bg-color);
+  outline-color: var(--form-bg-color);
+  font-weight: 700;
+}
+
+#inputform fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+}
+
+fieldset {
+  text-align: left;
+  font-weight: 700;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  border: 2px solid var(--form-bg-color);
+  box-shadow: 2px 2px 4px var(--form-bg-color);
+}
+
+legend {
+  color: var(--form-text-color);
+}
+
+button {
+  font-weight: 700;
+  border-radius: 4px;
+  border-color: var(--form-bg-color);
+  box-shadow: 2px 2px 4px var(--form-bg-color);
+  padding: 8px 4px;
+}
+
+button:hover {
+  background-color: var(--main-bg-color);
+  
+}
