@@ -7,20 +7,46 @@
   --hdft-text-color: #DADEDF;
   --form-bg-color: #f0f0f0;
   --form-text-color: #474747;
+  --preview-bg-color: #dadedf;
   border: 1px solid black;  
-  /* https://www.pinterest.com/pin/278026976972934168/ */
+  box-sizing: border-box;
 }
 
 .App {
   display:flex;
   flex-direction: column;
-  padding: 8px;
-  text-align: center;
+  white-space: pre-line;
+}
+
+@media print { 
+  @page {
+    size: letter portrait;
+    margin: 0;
+  }
+  body * {
+    visibility: hidden;
+    print-color-adjust: exact;
+  }
+  #outputpreview, #outputpreview * {
+    visibility: visible;
+  }
+  #outputpreview {
+    position: absolute;
+    padding: 0.25in;
+    left: 0;
+    top: 0;
+    box-shadow: none !important;
+  }
+  .prevexperience, 
+  .preveducation {
+    page-break-inside: avoid;
+  }
 }
 
 #header {
   background-color: var(--hdft-bg-color);
   color: var(--hdft-text-color);
+  text-align: center;
   padding: 16px;
 }
 
@@ -28,12 +54,28 @@
   background-color: var(--main-bg-color);
   color: var(--main-text-color);
   padding: 8px;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #footer {
   background-color: var(--hdft-bg-color);
   color: var(--hdft-text-color);
   padding: 8px;
+  text-align: center;
+}
+
+form {
+  margin: 16px 8px;
+  padding: 8px;
+  box-shadow: 2px 2px 4px black;
+  display:flex;
+  flex-direction: column;
+}
+
+#inputform {
+  width: clamp(200px, 100%, 800px);
 }
 
 #inputform input,
@@ -89,5 +131,110 @@ button {
 
 button:hover {
   background-color: var(--main-bg-color);
-  
 }
+
+#outputpreview {
+  background-color: #ffffff;
+  box-shadow: 2px 2px 4px #000000;
+  display:grid;
+  margin: 16px 8px;
+  width: clamp(200px, 100%, 8.5in);
+  min-height: 11in;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 140px 1fr;
+  grid-template-areas: 
+  'header header'
+  'content personal';
+}
+
+#pv-header {
+  grid-area: header;
+  margin: auto none;
+  display:flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+  padding-left: 16px;
+  align-content: flex-start;
+  background-color: var(--preview-bg-color);
+  color: var(--main-text-color);
+}
+
+#pv-name {
+  font-weight: 700;
+  font-size: 48px ;
+}
+
+#pv-title {
+  font-style: italic;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+#pv-content{
+  grid-area: content;
+  display:flex;
+  padding: 16px 8px;
+  flex-direction: column;  
+}
+
+#pv-personal {
+  grid-area: personal;
+  background-color: whitesmoke;
+  padding: 16px 8px;
+  display:flex;
+  flex-direction: column;
+}
+
+.pv-header, .pv-subheader {
+  color: var(--main-text-color);
+  font-weight: 700;
+  font-size: 18px;
+  margin: 8px 4px;
+}
+
+.pv-subheader {
+  font-size: 16px;
+  margin-left: 0;
+}
+
+.pv-borderbottom {
+  border-bottom: 1px solid var(--main-text-color);
+}
+
+.pv-componentlist {
+  display:flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.prevexperience,
+.preveducation {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+}
+
+.prevpersonal {
+  display:flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.italic{
+  font-style: italic;
+}
+
+.bold {
+  font-weight: 600;
+}
+
+.profile {
+  align-self: center;
+  width: clamp(100px, 100%, 200px);
+  aspect-ratio: 1/1;
+  outline: 4px solid var(--form-bg-color);
+  border-radius: 50%;
+}
+

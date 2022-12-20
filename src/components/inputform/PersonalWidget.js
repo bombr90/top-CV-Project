@@ -4,11 +4,20 @@ class PersonalWidget extends React.Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
+    this.handleImageChange = this.handleImageChange.bind(this);
     this.handleReset = this.handleReset.bind(this);
   }
 
   handleChange = (event) => this.props.personal.onChange(event);
+  handleImageChange = (event) => this.props.personal.onImageChange(event);
   handleReset = (event) => this.props.personal.onReset(event);
+
+  handleEnterSubmit(event){
+    if(event.code === 'Enter') {
+      event.preventDefault()
+      return false
+    }
+  }
 
   render() {
     return (
@@ -18,6 +27,7 @@ class PersonalWidget extends React.Component {
             name="firstname"
             value={this.props.personal.firstname}
             onChange={this.handleChange}
+            onKeyDown={this.handleEnterSubmit}
             type="text"
             placeholder="First name"
           ></input>
@@ -25,6 +35,7 @@ class PersonalWidget extends React.Component {
             name="lastname"
             value={this.props.personal.lastname}
             onChange={this.handleChange}
+            onKeyDown={this.handleEnterSubmit}
             type="text"
             placeholder="Last name"
           ></input>
@@ -32,20 +43,21 @@ class PersonalWidget extends React.Component {
             name="title"
             value={this.props.personal.title}
             onChange={this.handleChange}
+            onKeyDown={this.handleEnterSubmit}
             type="text"
-            placeholder="Title"
+            placeholder="Job Title"
           ></input>
           <input
             name="photo"
-            value={this.props.personal.photo}
-            onChange={this.handleChange}
+            onChange={this.handleImageChange}
             type="file"
-            placeholder="Photo"
+            placeholder="Photo File"
           ></input>
           <input
             name="address"
             value={this.props.personal.address}
             onChange={this.handleChange}
+            onKeyDown={this.handleEnterSubmit}
             type="text"
             placeholder="Address"
           ></input>
@@ -53,6 +65,7 @@ class PersonalWidget extends React.Component {
             name="phone"
             value={this.props.personal.phone}
             onChange={this.handleChange}
+            onKeyDown={this.handleEnterSubmit}
             type="tel"
             placeholder="Phone Number"
           ></input>
@@ -60,6 +73,7 @@ class PersonalWidget extends React.Component {
             name="email"
             value={this.props.personal.email}
             onChange={this.handleChange}
+            onKeyDown={this.handleEnterSubmit}
             type="email"
             placeholder="Email Address"
           ></input>
@@ -70,10 +84,12 @@ class PersonalWidget extends React.Component {
             type="text"
             placeholder="Description"
           ></textarea>
-          <button type="click" onClick={this.handleReset}>Clear</button>
+          <button type="click" onClick={this.handleReset}>
+            Clear
+          </button>
         </fieldset>
       </div>
-    )
+    );
   }
 }
 

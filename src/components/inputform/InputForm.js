@@ -9,6 +9,7 @@ class InputForm extends React.Component {
     super(props);
     //Personal Handle Binding
     this.handlePersonalChange = this.handlePersonalChange.bind(this);
+    this.handlePersonalImageChange = this.handlePersonalImageChange.bind(this);
     this.handlePersonalReset = this.handlePersonalReset.bind(this);
 
     //Experience Handle Binding
@@ -24,7 +25,7 @@ class InputForm extends React.Component {
   this.handleEducationNew = this.handleEducationNew.bind(this);
 
 
-    //Local Handle Binding
+    //Local Handle Binding to send form data to parent via callback method
     this.handleSubmit = this.handleSubmit.bind(this);
 
     // Form Local State
@@ -40,6 +41,7 @@ class InputForm extends React.Component {
         description: "",
         uid: uniqid(),
         onChange: this.handlePersonalChange,
+        onImageChange: this.handlePersonalImageChange,
         onReset: this.handlePersonalReset,
       },
       defaultExperience: {
@@ -58,7 +60,7 @@ class InputForm extends React.Component {
         name: "",
         city: "",
         degree: "",
-        Subject: "",
+        subject: "",
         start: "",
         end: "",
         uid: "",
@@ -76,7 +78,14 @@ class InputForm extends React.Component {
   //--------------------------------
   handleSubmit(event) {
     event.preventDefault();
-    console.log("Submission Successful!")
+    this.props.parentCB({personal: this.state.personal, experience: this.state.experienceEntries, education: this.state.educationEntries})
+  }
+
+  handleEnter(event){
+    if(event.ketCode === 13) {
+      event.preventDefault();
+      return false;
+    }
   }
 
   //--------------------------------
@@ -89,13 +98,20 @@ class InputForm extends React.Component {
     this.setState({ personal: newPersonal });
   }
 
+  handlePersonalImageChange(event) {
+    const key = event.target.name;
+    const value = URL.createObjectURL(event.target.files[0]);
+    const newPersonal = { ...this.state.personal, [key]: value };
+    this.setState({ personal: newPersonal });
+  }
+
   handlePersonalReset(event) {
+    event.stopPropagation();
     const newPersonal = {
       ...this.state.personal,
       firstname: "",
       lastname: "",
       title: "",
-      photo: "",
       address: "",
       phone: "",
       email: "",
@@ -116,7 +132,6 @@ class InputForm extends React.Component {
       const index = prevState.experienceEntries.findIndex(
         (el) => el.uid === id
       );
-      // if (index < 0) return false;
       const newExperienceEntries = { ...this.state.experienceEntries };
       newExperienceEntries[index][name] = value;
       return newExperienceEntries;
@@ -220,7 +235,6 @@ class InputForm extends React.Component {
   render() {
     return (
       <div id="inputform">
-        The Input Form...
         <form onSubmit={this.handleSubmit}>
           <fieldset>
             <legend>Personal Information</legend>
@@ -255,9 +269,3 @@ class InputForm extends React.Component {
 }
 
 export default InputForm;
-
-
- // this.baseState = Object.keys(this.props.experience).reduce((obj, key) => {
-    //   obj[key] = "";
-    //   return obj;
-    // }, {});
