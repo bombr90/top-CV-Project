@@ -1,35 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import PersonalWidget from './PersonalWidget'
 import ExperienceWidget from "./ExperienceWidget"
 import EducationWidget from "./EducationWidget";
 import uniqid from 'uniqid'
 
-class InputForm extends React.Component {
-  constructor(props) {
-    super(props);
-    //Personal Handle Binding
-    this.handlePersonalChange = this.handlePersonalChange.bind(this);
-    this.handlePersonalImageChange = this.handlePersonalImageChange.bind(this);
-    this.handlePersonalReset = this.handlePersonalReset.bind(this);
-
-    //Experience Handle Binding
-  this.handleExperienceChange = this.handleExperienceChange.bind(this);
-  this.handleExperienceReset = this.handleExperienceReset.bind(this);
-  this.handleExperienceDelete = this.handleExperienceDelete.bind(this);
-  this.handleExperienceNew = this.handleExperienceNew.bind(this);
-
-    // Education Handle Binding
-  this.handleEducationChange = this.handleEducationChange.bind(this);
-  this.handleEducationReset = this.handleEducationReset.bind(this);
-  this.handleEducationDelete = this.handleEducationDelete.bind(this);
-  this.handleEducationNew = this.handleEducationNew.bind(this);
-
-
-    //Local Handle Binding to send form data to parent via callback method
-    this.handleSubmit = this.handleSubmit.bind(this);
-
-    // Form Local State
-    this.state = {
+const InputForm = (props) => {
+  const [state, setState] = useState(
+    {
       personal: {
         firstname: "",
         lastname: "",
@@ -40,9 +17,9 @@ class InputForm extends React.Component {
         email: "",
         description: "",
         uid: uniqid(),
-        onChange: this.handlePersonalChange,
-        onImageChange: this.handlePersonalImageChange,
-        onReset: this.handlePersonalReset,
+        onChange: handlePersonalChange,
+        onImageChange: handlePersonalImageChange,
+        onReset: handlePersonalReset,
       },
       defaultExperience: {
         position: "",
@@ -51,9 +28,9 @@ class InputForm extends React.Component {
         end: "",
         description: ``,
         uid: "",
-        onChange: this.handleExperienceChange,
-        onReset: this.handleExperienceReset,
-        onDelete: this.handleExperienceDelete,
+        onChange: handleExperienceChange,
+        onReset: handleExperienceReset,
+        onDelete: handleExperienceDelete,
       },
       experienceEntries: [],
       defaultEducation: {
@@ -64,51 +41,61 @@ class InputForm extends React.Component {
         start: "",
         end: "",
         uid: "",
-        onChange: this.handleEducationChange,
-        onReset: this.handleEducationReset,
-        onDelete: this.handleEducationDelete,
+        onChange: handleEducationChange,
+        onReset: handleEducationReset,
+        onDelete: handleEducationDelete,
       },
 
       educationEntries: [],
-    };
-  }
-
+    }
+  )
+  
   //--------------------------------
   // ##Local Events
   //--------------------------------
-  handleSubmit(event) {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    this.props.parentCB({personal: this.state.personal, experience: this.state.experienceEntries, education: this.state.educationEntries})
+    props.parentCB({personal: state.personal, experience: state.experienceEntries, education: state.educationEntries})
   }
 
-  handleEnter(event){
-    if(event.ketCode === 13) {
+  const handleEnter = (event) =>{
+    if(event.keyCode === 13) {
       event.preventDefault();
       return false;
     }
   }
-
+  
   //--------------------------------
   // ##Personal Widget Events
   //--------------------------------
-  handlePersonalChange(event) {
+  function handlePersonalChange(event) {
     const key = event.target.name;
     const value = event.target.value;
-    const newPersonal = { ...this.state.personal, [key]: value };
-    this.setState({ personal: newPersonal });
+    setState(prev => {
+      const newPersonal = { ...prev.personal, [key]: value };
+      return ({
+        ...prev,
+        personal:newPersonal
+      })
+    })
   }
 
-  handlePersonalImageChange(event) {
+  function handlePersonalImageChange(event) {
     const key = event.target.name;
     const value = URL.createObjectURL(event.target.files[0]);
-    const newPersonal = { ...this.state.personal, [key]: value };
-    this.setState({ personal: newPersonal });
+    setState((prev) => {
+      const newPersonal = { ...prev.personal, [key]: value };
+      return {
+        ...prev,
+        personal: newPersonal
+      };
+    });
   }
 
-  handlePersonalReset(event) {
+  function handlePersonalReset(event) {
     event.stopPropagation();
     const newPersonal = {
-      ...this.state.personal,
+      ...state.personal,
       firstname: "",
       lastname: "",
       title: "",
@@ -117,33 +104,40 @@ class InputForm extends React.Component {
       email: "",
       description: "",
     };
-    this.setState({ personal: newPersonal });
+    setState((prevState) => ({
+      ...prevState,
+      personal: newPersonal,
+    }));
   }
 
   //--------------------------------
   // ##Experience Widget Events
   //--------------------------------
-  handleExperienceChange(event) {
+  function handleExperienceChange(event) {
     const target = event.target;
     const id = target.parentElement.id;
     const name = target.name;
     const value = target.value;
-    this.setState((prevState) => {
+
+    setState((prevState) => {
       const index = prevState.experienceEntries.findIndex(
         (el) => el.uid === id
       );
-      const newExperienceEntries = { ...this.state.experienceEntries };
+      const newExperienceEntries = [ ...prevState.experienceEntries ];
       newExperienceEntries[index][name] = value;
-      return newExperienceEntries;
+      return ({
+        ...prevState, 
+        experienceEntries: newExperienceEntries
+      });
     });
   }
 
-  handleExperienceReset(event) {
-    this.setState((prevState) => {
+  function handleExperienceReset(event) {
+    setState((prevState) => {
       const index = prevState.experienceEntries.findIndex(
         (el) => el.uid === event.target.parentElement.id
       );
-      const existingEntry = {
+      const resetEntry = {
         ...prevState.experienceEntries[index],
         position: "",
         title: "",
@@ -152,13 +146,13 @@ class InputForm extends React.Component {
         description: "",
       };
       const newEntries = [...prevState.experienceEntries];
-      newEntries[index] = existingEntry;
+      newEntries[index] = resetEntry;
       return { ...prevState, experienceEntries: newEntries };
     });
   }
 
-  handleExperienceDelete(event) {
-    this.setState((prevState) => {
+  function handleExperienceDelete(event) {
+    setState((prevState) => {
       const newEntries = [...prevState.experienceEntries].filter(
         (el) => el.uid !== event.target.parentElement.id
       );
@@ -166,8 +160,8 @@ class InputForm extends React.Component {
     });
   }
 
-  handleExperienceNew(event) {
-    this.setState((prevState) => {
+  function handleExperienceNew(event) {
+    setState((prevState) => {
       const newEntry = { ...prevState.defaultExperience, uid: uniqid() };
       const newEntries = [...prevState.experienceEntries, newEntry];
       return { ...prevState, experienceEntries: newEntries };
@@ -177,27 +171,30 @@ class InputForm extends React.Component {
   //--------------------------------
   // ##Education Widget Events
   //--------------------------------
-  handleEducationChange(event) {
+  function handleEducationChange(event) {
     const target = event.target;
     const id = target.parentElement.id;
     const name = target.name;
     const value = target.value;
-    this.setState((prevState) => {
+    setState((prevState) => {
       const index = prevState.educationEntries.findIndex(
         (el) => el.uid === id
       );
-      const newEducationEntries = { ...this.state.educationEntries };
+      const newEducationEntries = [ ...prevState.educationEntries ];
       newEducationEntries[index][name] = value;
-      return newEducationEntries;
+      return ({
+        ...prevState,
+        educationEntries: newEducationEntries
+      })
     });
   }
 
-  handleEducationReset(event) {
-    this.setState((prevState) => {
+  function handleEducationReset(event) {
+    setState((prevState) => {
       const index = prevState.educationEntries.findIndex(
         (el) => el.uid === event.target.parentElement.id
       );
-      const existingEntry = {
+      const resetEntry = {
         ...prevState.educationEntries[index],
         name: "",
         city: "",
@@ -207,13 +204,13 @@ class InputForm extends React.Component {
         end: "",
       };
       const newEntries = [...prevState.educationEntries];
-      newEntries[index] = existingEntry;
+      newEntries[index] = resetEntry;
       return { ...prevState, educationEntries: newEntries };
     });
   }
 
-  handleEducationDelete(event) {
-    this.setState((prevState) => {
+  function handleEducationDelete(event) {
+    setState((prevState) => {
       const newEntries = [...prevState.educationEntries].filter(
         (el) => el.uid !== event.target.parentElement.id
       );
@@ -221,51 +218,46 @@ class InputForm extends React.Component {
     });
   }
 
-  handleEducationNew(event) {
-    this.setState((prevState) => {
+  function handleEducationNew(event) {
+    setState((prevState) => {
       const newEntry = { ...prevState.defaultEducation, uid: uniqid() };
       const newEntries = [...prevState.educationEntries, newEntry];
       return { ...prevState, educationEntries: newEntries };
     });
   }
-  //--------------------------------
-  // ##Render
-  //--------------------------------
 
-  render() {
-    return (
-      <div id="inputform">
-        <form onSubmit={this.handleSubmit}>
-          <fieldset>
-            <legend>Personal Information</legend>
-            <PersonalWidget
-              key={this.state.personal.uid}
-              personal={this.state.personal}
-            />
-          </fieldset>
-          <fieldset>
-            <legend>Experience</legend>
-            {this.state.experienceEntries.map((entry) => {
-              return <ExperienceWidget key={entry.uid} experience={entry} />;
-            })}
-            <button type="click" onClick={this.handleExperienceNew}>
-              Add New Experience
-            </button>
-          </fieldset>
-          <fieldset>
-            <legend>Education</legend>
-            {this.state.educationEntries.map((entry) => {
-              return <EducationWidget key={entry.uid} education={entry} />;
-            })}
-            <button type="click" onClick={this.handleEducationNew}>
-              Add New Education
-            </button>
-          </fieldset>
-          <button type="submit">Generate Preview</button>
-        </form>
-      </div>
-    );
-  }
+  return (
+    <div id="inputform">
+      <form onSubmit={handleSubmit}>
+        <fieldset>
+          <legend>Personal Information</legend>
+          <PersonalWidget
+            key={state.personal.uid}
+            personal={state.personal}
+          />
+        </fieldset>
+        <fieldset>
+          <legend>Experience</legend>
+          {state.experienceEntries.map((entry) => {
+            return <ExperienceWidget key={entry.uid} experience={entry} />;
+          })}
+          <button type="click" onClick={handleExperienceNew}>
+            Add New Experience
+          </button>
+        </fieldset>
+        <fieldset>
+          <legend>Education</legend>
+          {state.educationEntries.map((entry) => {
+            return <EducationWidget key={entry.uid} education={entry} />;
+          })}
+          <button type="click" onClick={handleEducationNew}>
+            Add New Education
+          </button>
+        </fieldset>
+        <button type="submit">Generate Preview</button>
+      </form>
+    </div>
+  );
 }
 
 export default InputForm;

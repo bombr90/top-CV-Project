@@ -1,66 +1,58 @@
 import React from "react";
 
-class ExperienceWidget extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleReset = this.handleReset.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-  }
+const ExperienceWidget = (props) => {
 
-  handleChange = (event) => this.props.experience.onChange(event);
-  handleReset = (event) => this.props.experience.onReset(event);
-  handleDelete = (event) => this.props.experience.onDelete(event);
+  const handleChange = (event) => props.experience.onChange(event);
+  const handleReset = (event) => props.experience.onReset(event);
+  const handleDelete = (event) => props.experience.onDelete(event);
 
-  render() {
-    return (
-      <div>
-        <fieldset id={this.props.experience.uid}>
-          <input
-            name="position"
-            value={this.props.experience.position}
-            onChange={this.handleChange}
-            type="text"
-            placeholder="Job Position"
-          ></input>
-          <input
-            name="title"
-            value={this.props.experience.title}
-            onChange={this.handleChange}
-            type="text"
-            placeholder="Job Title"
-          ></input>
-          <input
-            name="start"
-            value={this.props.experience.start}
-            onChange={this.handleChange}
-            type="date"
-            placeholder="Start Date"
-          ></input>
-          <input
-            name="end"
-            value={this.props.experience.end}
-            onChange={this.handleChange}
-            type="date"
-            placeholder="End Date"
-          ></input>
-          <textarea
-            name="description"
-            value={this.props.experience.description}
-            onChange={this.handleChange}
-            type="text"
-            placeholder="Summary of roles and responsibilities"
-          ></textarea>
-          <button type="click" onClick={this.handleReset}>
-            Clear
-          </button>
-          <button type="click" onClick={this.handleDelete}>
-            Delete
-          </button>
-        </fieldset>
-      </div>
-    );
-  }
-};
+  return (
+    <div>
+      <fieldset id={props.experience.uid}>
+        <input
+          name="position"
+          value={props.experience.position}
+          onChange={handleChange}
+          type="text"
+          placeholder="Job Position"
+        ></input>
+        <input
+          name="title"
+          value={props.experience.title}
+          onChange={handleChange}
+          type="text"
+          placeholder="Job Title"
+        ></input>
+        <input
+          name="start"
+          value={props.experience.start}
+          onChange={handleChange}
+          type="date"
+          placeholder="Start Date"
+        ></input>
+        <input
+          name="end"
+          value={props.experience.end}
+          onChange={handleChange}
+          type="date"
+          placeholder="End Date"
+        ></input>
+        <textarea
+          name="description"
+          value={props.experience.description}
+          onChange={handleChange}
+          type="text"
+          placeholder="Summary of roles and responsibilities"
+        ></textarea>
+        <button type="click" onClick={handleReset}>
+          Clear
+        </button>
+        <button type="click" onClick={handleDelete}>
+          Delete
+        </button>
+      </fieldset>
+    </div>
+  );
+}
 
 export default ExperienceWidget;
